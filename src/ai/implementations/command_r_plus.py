@@ -16,18 +16,16 @@ class CommandRplus(LLM):
             while not successful and attempts < 3:
                 try:
                     attempts += 1
-                    result = self.llm.batch(prompt)
-                    print('RESULT: ', result)
-                    result_text = json.loads(result['text'])
-                    print(result_text)
+                    result = self.llm.invoke(prompt)
+                    result_text = json.loads(result.content)
                     successful = True
                 except:
                     pass
                 
             if not successful:
-                raise Exception(str(e))
+                raise Exception('LLM connection error: Max call attempts!')
             
-            return result
+            return result_text
         except Exception as e:
             print(e)
             raise Exception(str(e)) from e

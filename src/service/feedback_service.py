@@ -27,9 +27,8 @@ class FeedbackService():
         feedback = data['feedback']
         
         # check if the feedback is a spam
-        spam_validator_prompt = PromptCreator.create_spam_prompt()
-        prompt_replacements = {'feedback': feedback}
-        llm_response = self.llm.perform_request(prompt=spam_validator_prompt, prompt_replacements=prompt_replacements)
+        spam_validator_prompt = PromptCreator.create_spam_prompt(feedback=feedback)
+        llm_response = self.llm.perform_request(prompt=spam_validator_prompt)
         print(llm_response)
         
 
