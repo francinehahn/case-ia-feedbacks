@@ -1,4 +1,4 @@
-class FeedbackCode:
+class FeatureCode:
     def __init__(self, code: str):
         self.code = code
     
