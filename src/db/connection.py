@@ -1,6 +1,9 @@
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 import mysql.connector
 from mysql.connector import Error
-from config.db_config import DB_CONFIG
+from src.config.db_config import DB_CONFIG
 
 class DatabaseConnection:
     _instance = None
