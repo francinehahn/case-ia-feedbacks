@@ -1,8 +1,11 @@
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from flask import Flask, jsonify, request
-from src.service.feedback_service import FeedbackService
-from src.repository.implementations.feedback_mysql import FeedbackMySQL
-from src.repository.implementations.requested_features_mysql import RequestedFeaturesMySQL
-from src.db.connection import DatabaseConnection
+from service.feedback_service import FeedbackService
+from repository.implementations.feedback_mysql import FeedbackMySQL
+from repository.implementations.requested_features_mysql import RequestedFeaturesMySQL
+from db.connection import DatabaseConnection
 
 app = Flask(__name__)
 
