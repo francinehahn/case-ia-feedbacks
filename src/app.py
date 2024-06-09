@@ -19,32 +19,33 @@ load_dotenv()
 
 app = Flask(__name__)
 
+# database connection
+db_connection = DatabaseConnection()
+
+# repository layer
+feedback_repository = FeedbackMySQL(connection=db_connection)
+requested_features_repository = RequestedFeaturesMySQL(connection=db_connection)
+feature_codes_repository = FeatureCodesMySQL(connection=db_connection)
+
+# AI
+llm = CommandRplus()
+
+# email sender
+email_sender = EmailSender()
+    
+# service layer
+feedback_service = FeedbackService(
+    feedback_repository=feedback_repository,
+    requested_features_repository=requested_features_repository,
+    feature_codes_repository=feature_codes_repository,
+    llm=llm,
+    email_sender=email_sender
+)
+
 # web page
 @app.route('/')
 def index():
     try:
-        # database connection
-        db_connection = DatabaseConnection()
-        
-        # repository layer
-        feedback_repository = FeedbackMySQL(connection=db_connection)
-        requested_features_repository = RequestedFeaturesMySQL(connection=db_connection)
-        feature_codes_repository = FeatureCodesMySQL(connection=db_connection)
-        
-        # AI
-        llm = CommandRplus()
-        
-        # email sender
-        email_sender = EmailSender()
-        
-        # service layer
-        feedback_service = FeedbackService(
-            feedback_repository=feedback_repository,
-            requested_features_repository=requested_features_repository,
-            feature_codes_repository=feature_codes_repository,
-            llm=llm,
-            email_sender=email_sender
-        )
         report = feedback_service.feedbacks_report()
         return render_template('index.html', report=report)
     except ValueError as e:
@@ -60,29 +61,6 @@ def feedbacks():
     try:
         # get data from the client
         feedback_data = request.get_json()
-        
-        # database connection
-        db_connection = DatabaseConnection()
-        
-        # repository layer
-        feedback_repository = FeedbackMySQL(connection=db_connection)
-        requested_features_repository = RequestedFeaturesMySQL(connection=db_connection)
-        feature_codes_repository = FeatureCodesMySQL(connection=db_connection)
-        
-        # AI
-        llm = CommandRplus()
-        
-        # email sender
-        email_sender = EmailSender()
-            
-        # service layer
-        feedback_service = FeedbackService(
-            feedback_repository=feedback_repository,
-            requested_features_repository=requested_features_repository,
-            feature_codes_repository=feature_codes_repository,
-            llm=llm,
-            email_sender=email_sender
-        )
         feedback = feedback_service.feedbacks(feedback_data)
         
         return jsonify(feedback), 201
@@ -99,28 +77,6 @@ def feedbacks():
 # this function will be called every friday at 6PM to send the weekly report by email
 def weekly_summary():
     try:
-        # database connection
-        db_connection = DatabaseConnection()
-
-        # repository layer
-        feedback_repository = FeedbackMySQL(connection=db_connection)
-        requested_features_repository = RequestedFeaturesMySQL(connection=db_connection)
-        feature_codes_repository = FeatureCodesMySQL(connection=db_connection)
-
-        # AI
-        llm = CommandRplus()
-        
-        # email sender
-        email_sender = EmailSender()
-
-        # service layer
-        feedback_service = FeedbackService(
-            feedback_repository=feedback_repository,
-            requested_features_repository=requested_features_repository,
-            feature_codes_repository=feature_codes_repository,
-            llm=llm,
-            email_sender=email_sender
-        )
         feedback_service.weekly_summary()
     except smtplib.SMTPException as e:
         raise smtplib.SMTPException(str(e)) from e
@@ -131,7 +87,7 @@ def weekly_summary():
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler(daemon=True)
-    scheduler.add_job(weekly_summary, 'cron', day_of_week='fri', hour=18, minute=00)
+    scheduler.add_job(weekly_summary, 'cron', day_of_week='sun', hour=19, minute=37)
     scheduler.start()
 
     try:
