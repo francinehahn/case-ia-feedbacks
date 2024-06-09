@@ -14,15 +14,17 @@ class EmailSender():
         self.recipient_email = os.getenv("EMAIL_RECEIVER")
         self.smtp_server = os.getenv("MAIL_SERVER")
         self.smtp_port = 587
-    
+
     def send(self, email:str):
-        # Create the message
-        message = EmailMessage()
-        message.set_content(email)
-        message['From'] = self.sender_email
-        message['To'] = self.recipient_email
-        message['Subject'] = 'Feedback Weekly Report'
         try:
+            # Create the message
+            message = EmailMessage()
+            message.set_content(email)
+            message['From'] = self.sender_email
+            message['To'] = self.recipient_email
+            message['Subject'] = 'Feedback Weekly Report'
+
+            # send the email
             smtp_obj = smtplib.SMTP(self.smtp_server, self.smtp_port)
             smtp_obj.starttls()
             smtp_obj.login(self.sender_email, self.sender_password)
@@ -30,4 +32,4 @@ class EmailSender():
             smtp_obj.quit()
             print('Email sent successfully.')
         except smtplib.SMTPException as e:
-            print('Error sending email:', str(e))
+            raise smtplib.SMTPException(str(e))

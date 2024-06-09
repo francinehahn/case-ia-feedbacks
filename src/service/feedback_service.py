@@ -11,7 +11,7 @@ from prompts.prompt_creator import PromptCreator
 from entities.feature_code import FeatureCode
 from entities.feedback import Feedback
 from entities.requested_feature import RequestedFeature
-from flask_mail import BadHeaderError
+import smtplib
 from marshmallow import ValidationError
 from datetime import datetime, timedelta
 import json
@@ -157,8 +157,9 @@ class FeedbackService():
             
             # send email
             self.email_sender.send(email)
-        except BadHeaderError as e:
-            raise BadHeaderError(str(e)) from e
+        
+        except smtplib.SMTPException as e:
+            raise smtplib.SMTPException(str(e))
         except Error as e:
             raise Error(str(e)) from e
         except Exception as e:

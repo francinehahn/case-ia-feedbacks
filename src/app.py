@@ -2,7 +2,7 @@ import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from mysql.connector import Error
-import requests
+import smtplib
 from marshmallow import ValidationError
 from flask import Flask, jsonify, request, render_template
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -98,35 +98,36 @@ def feedbacks():
     
 # this function will be called every friday at 6PM to send the weekly report by email
 def weekly_summary():
-    with app.app_context():
-        try:
-            # database connection
-            db_connection = DatabaseConnection()
+    try:
+        # database connection
+        db_connection = DatabaseConnection()
 
-            # repository layer
-            feedback_repository = FeedbackMySQL(connection=db_connection)
-            requested_features_repository = RequestedFeaturesMySQL(connection=db_connection)
-            feature_codes_repository = FeatureCodesMySQL(connection=db_connection)
+        # repository layer
+        feedback_repository = FeedbackMySQL(connection=db_connection)
+        requested_features_repository = RequestedFeaturesMySQL(connection=db_connection)
+        feature_codes_repository = FeatureCodesMySQL(connection=db_connection)
 
-            # AI
-            llm = CommandRplus()
-            
-            # email sender
-            email_sender = EmailSender()
+        # AI
+        llm = CommandRplus()
+        
+        # email sender
+        email_sender = EmailSender()
 
-            # service layer
-            feedback_service = FeedbackService(
-                feedback_repository=feedback_repository,
-                requested_features_repository=requested_features_repository,
-                feature_codes_repository=feature_codes_repository,
-                llm=llm,
-                email_sender=email_sender
-            )
-            feedback_service.weekly_summary()
-        except Error as e:
-            print(str(e))
-        except Exception as e:
-            print(str(e))
+        # service layer
+        feedback_service = FeedbackService(
+            feedback_repository=feedback_repository,
+            requested_features_repository=requested_features_repository,
+            feature_codes_repository=feature_codes_repository,
+            llm=llm,
+            email_sender=email_sender
+        )
+        feedback_service.weekly_summary()
+    except smtplib.SMTPException as e:
+        raise smtplib.SMTPException(str(e)) from e
+    except Error as e:
+        raise Error(str(e)) from e
+    except Exception as e:
+        raise Exception(str(e)) from e
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler(daemon=True)
