@@ -11,17 +11,21 @@ class EmailSender():
         # Email configuration
         self.sender_email = os.getenv("MAIL_USERNAME")
         self.sender_password = os.getenv("MAIL_PASSWORD")
-        self.recipient_email = os.getenv("EMAIL_RECEIVER")
+        self.recipients_emails = os.getenv("EMAIL_RECEIVERS")
         self.smtp_server = os.getenv("MAIL_SERVER")
         self.smtp_port = 587
 
     def send(self, email:str):
         try:
+            # get all the emails included in the string
+            recipients = self.recipients_emails.split(',')
+            print('recipients: ', recipients)
+            
             # Create the message
             message = EmailMessage()
             message.set_content(email)
             message['From'] = self.sender_email
-            message['To'] = self.recipient_email
+            message['To'] = recipients
             message['Subject'] = 'Feedback Weekly Report'
 
             # send the email
