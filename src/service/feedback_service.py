@@ -34,6 +34,12 @@ class FeedbackService():
             feedback_id = data['id']
             feedback = data['feedback']
             
+            # check if the feedback id already exists in the database
+            feedback_data_db = self.feedback_repository.get_feedback_by_id(feedback_id=feedback_id)
+            
+            if feedback_data_db:
+                raise ValueError('Feedback id already registered in the database.')
+                
             # check if the feedback is a spam
             spam_validator_prompt = PromptCreator.create_spam_prompt(feedback=feedback)
             llm_spam_response = self.llm.perform_request(prompt=spam_validator_prompt)

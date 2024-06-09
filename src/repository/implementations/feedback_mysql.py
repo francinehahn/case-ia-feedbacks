@@ -23,7 +23,7 @@ class FeedbackMySQL(FeedbackRepository):
         try:
             connection_db = self.connection.connect()
             cursor = connection_db.cursor()
-            query = f"SELECT * FROM {self.__table_name} WHERE id == %s"
+            query = f"SELECT * FROM {self.__table_name} WHERE id = %s"
             cursor.execute(query, (feedback_id,))
             result = cursor.fetchone()
             return result
