@@ -115,7 +115,8 @@ class FeedbackService():
             # get sentiment percentages from the last 7 days
             sentiment_percentages_db = self.feedback_repository.get_feedbacks_sentiment_percentage(time_period=seven_days_ago)
             sentiment_percentages_dict = {sentiment[0]: float(sentiment[1]) for sentiment in sentiment_percentages_db}
-            sentiment_percentages_dict.pop('INCONCLUSIVO')
+            if 'INCONCLUSIVO' in sentiment_percentages_dict:
+                sentiment_percentages_dict.pop('INCONCLUSIVO')
             
             # get the requested features from the last 7 days
             requested_features_db = self.requested_features_repository.get_requested_features(time_period=seven_days_ago)
