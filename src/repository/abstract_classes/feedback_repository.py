@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
 
 class FeedbackRepository(ABC):
-    pass
+    @abstractmethod
+    def insert_feedback(self, feedback):
+        pass

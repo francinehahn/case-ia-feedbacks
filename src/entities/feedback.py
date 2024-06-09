@@ -1,6 +1,6 @@
 class Feedback:
     def __init__(self, id:str, feedback:str, sentiment:str):
-        self.id = id,
+        self.id = id
         self.feedback = feedback
         self.sentiment = sentiment
     
