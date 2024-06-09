@@ -10,7 +10,8 @@ from repository.implementations.requested_features_mysql import RequestedFeature
 from repository.implementations.feature_codes_mysql import FeatureCodesMySQL
 from db.connection import DatabaseConnection
 from ai.implementations.command_r_plus import CommandRplus
-from email.email_sender import EmailSender
+from email_sender.email_sender import EmailSender
+from flask_mail import BadHeaderError
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -75,7 +76,7 @@ def weekly_summary():
         llm = CommandRplus()
         
         # email sender
-        email_sender = EmailSender()
+        email_sender = EmailSender(app=app)
 
         # service layer
         feedback_service = FeedbackService(
@@ -88,10 +89,8 @@ def weekly_summary():
         feedback_service.weekly_summary()
 
         return jsonify({'message': 'The email has been sent successfully.'}), 200
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 422
-    except ValidationError as e:
-        return jsonify({"error": str(e)}), 422
+    except BadHeaderError as e:
+        return jsonify({"error": str(e)}), 500
     except Error as e:
         return jsonify({"error": str(e)}), 500
     except Exception as e:

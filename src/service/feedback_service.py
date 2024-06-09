@@ -11,6 +11,7 @@ from prompts.prompt_creator import PromptCreator
 from entities.feature_code import FeatureCode
 from entities.feedback import Feedback
 from entities.requested_feature import RequestedFeature
+from flask_mail import BadHeaderError
 from marshmallow import ValidationError
 from datetime import datetime, timedelta
 import json
@@ -114,8 +115,8 @@ class FeedbackService():
             # get sentiment percentages from the last 7 days
             sentiment_percentages_db = self.feedback_repository.get_feedbacks_sentiment_percentage(time_period=seven_days_ago)
             sentiment_percentages_dict = {sentiment[0]: float(sentiment[1]) for sentiment in sentiment_percentages_db}
-            sentiment_percentages_dict.pop('INCONCLUSIVO'
-                                           )
+            sentiment_percentages_dict.pop('INCONCLUSIVO')
+            
             # get the requested features from the last 7 days
             requested_features_db = self.requested_features_repository.get_requested_features(time_period=seven_days_ago)
             requested_features_dict = {}
@@ -133,11 +134,9 @@ class FeedbackService():
             email = self.llm.perform_request(prompt=email_prompt)
             
             # send email
-            self.email_sender.send_alert(email)
-        except ValueError as e:
-            raise ValueError(str(e)) from e
-        except ValidationError as e:
-            raise ValidationError(str(e)) from e
+            self.email_sender.send(email)
+        except BadHeaderError as e:
+            raise BadHeaderError(str(e)) from e
         except Error as e:
             raise Error(str(e)) from e
         except Exception as e:
