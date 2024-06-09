@@ -13,6 +13,7 @@ from entities.feedback import Feedback
 from entities.requested_feature import RequestedFeature
 from marshmallow import ValidationError
 from datetime import datetime, timedelta
+import json
 
 class FeedbackService():
     def __init__(
@@ -43,7 +44,7 @@ class FeedbackService():
                 
             # check if the feedback is a spam
             spam_validator_prompt = PromptCreator.create_spam_prompt(feedback=feedback)
-            llm_spam_response = self.llm.perform_request(prompt=spam_validator_prompt)
+            llm_spam_response = json.loads(self.llm.perform_request(prompt=spam_validator_prompt))
             
             # if the feedback is classifies as a spam
             if llm_spam_response['spam'].lower() == 'sim':
@@ -55,7 +56,7 @@ class FeedbackService():
             
             # feedback classification
             sentiment_analysis_prompt = PromptCreator.create_sentiment_analysis_prompt(feedback=feedback, codes=str(code_names))
-            llm_sentiment_analysis_result = self.llm.perform_request(prompt=sentiment_analysis_prompt)
+            llm_sentiment_analysis_result = json.loads(self.llm.perform_request(prompt=sentiment_analysis_prompt))
 
             # get sentiment analysis results from the llm
             sentiment = llm_sentiment_analysis_result['sentiment']
@@ -127,7 +128,8 @@ class FeedbackService():
                 feedback_percentages=str(sentiment_percentages_dict),
                 requested_features=str(requested_features_dict)
             )
-            print(email_prompt)
+            email = self.llm.perform_request(prompt=email_prompt)
+            print(email)
         except ValueError as e:
             raise ValueError(str(e)) from e
         except ValidationError as e:
