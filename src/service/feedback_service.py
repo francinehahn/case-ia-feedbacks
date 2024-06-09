@@ -111,11 +111,11 @@ class FeedbackService():
         try:
             # get sentiment percentages
             sentiment_percentages_db = self.feedback_repository.get_feedbacks_sentiment_percentage()
-            sentiment_percentages_dict = {sentiment[0]: float(sentiment[1]) for sentiment in sentiment_percentages_db}
+            sentiment_percentages_dict = {sentiment[0]: round(float(sentiment[1]),1) for sentiment in sentiment_percentages_db}
             
             # get main requested features
             requested_features_db = self.requested_features_repository.get_requested_features_percentage()
-            requested_features_dict = {rf[0]: float(rf[1]) for rf in requested_features_db}
+            requested_features_dict = {rf[0]: round(float(rf[1]),1) for rf in requested_features_db}
             
             return {
                 'sentiment_percentages_dict': sentiment_percentages_dict,
@@ -135,9 +135,15 @@ class FeedbackService():
             
             # get sentiment percentages from the last 7 days
             sentiment_percentages_db = self.feedback_repository.get_feedbacks_sentiment_percentage(time_period=seven_days_ago)
-            sentiment_percentages_dict = {sentiment[0]: float(sentiment[1]) for sentiment in sentiment_percentages_db}
-            if 'INCONCLUSIVO' in sentiment_percentages_dict:
-                sentiment_percentages_dict.pop('INCONCLUSIVO')
+            
+            # if there are no feedbacks within the last 7 days, send an email informing this
+            if sentiment_percentages_db:
+                sentiment_percentages_dict = {sentiment[0]: float(sentiment[1]) for sentiment in sentiment_percentages_db}
+                if 'INCONCLUSIVO' in sentiment_percentages_dict:
+                    sentiment_percentages_dict.pop('INCONCLUSIVO')
+            else:
+                self.email_sender.send('Prezados,\nInformo que não recebemos nenhum feedback nos últimos 7 dias.\nAtenciosamente,\nAlumind Bot')
+                return
             
             # get the requested features from the last 7 days
             requested_features_db = self.requested_features_repository.get_requested_features(time_period=seven_days_ago)
