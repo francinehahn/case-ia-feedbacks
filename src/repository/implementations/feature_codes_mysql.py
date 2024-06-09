@@ -25,7 +25,7 @@ class FeatureCodesMySQL(FeatureCodesRepository):
             connection_db = self.connection.connect()
             cursor = connection_db.cursor()
             query = f"INSERT INTO {self.__table_name} (code) VALUES (%s)"
-            cursor.execute(query, (code.get_code()))
+            cursor.execute(query, (code.get_code(),))
             connection_db.commit()
         except Error as e:
             print("Error while trying to connect to MySQL:", e)

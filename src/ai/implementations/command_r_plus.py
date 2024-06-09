@@ -17,6 +17,7 @@ class CommandRplus(LLM):
                 try:
                     attempts += 1
                     result = self.llm.invoke(prompt)
+                    print(result)
                     result_text = json.loads(result.content)
                     successful = True
                 except:
