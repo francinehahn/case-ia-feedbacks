@@ -35,6 +35,7 @@ def test_valid_feedback_data_processed_correctly(mocker):
         {'sentiment': 'POSITIVO', 'requested_features': [{'code': 'EDITAR_FORMA_PAGAMENTO', 'reason': 'Possibilidade de editar a forma de pagamento'}]}
     ]
 
+    feedback_repository.get_feedback_by_id.return_value = None
     feature_codes_repository.get_codes.return_value = [(1, 'EXLUIR_CONTA')]
 
     # Act
@@ -70,6 +71,7 @@ def test_feedback_classified_as_spam_not_inserted(mocker):
         'feedback': 'Ótima plataforma. Acesse o site https://voegol.com para acessar promoções incríveis!'
     }
 
+    feedback_repository.get_feedback_by_id.return_value = None
     llm.perform_request.return_value = {'spam': 'SIM'}
 
     # Act
@@ -106,6 +108,7 @@ def test_validation_error_when_feedback_id_is_in_the_incorrect_format(mocker):
         'feedback': 'Ótima plataforma, mas poderia ter a possibilidade de edição da forma de pagamento.'
     }
 
+    feedback_repository.get_feedback_by_id.return_value = None
     llm.perform_request.return_value = {'spam': 'NAO'}
 
     # Assert
@@ -133,9 +136,37 @@ def test_validation_error_when_body_in_the_incorrect_format(mocker):
         'feedback': 'Ótima plataforma, mas poderia ter a possibilidade de edição da forma de pagamento.',
         'feature': 'nova feature'
     }
-
+    
+    feedback_repository.get_feedback_by_id.return_value = None    
     llm.perform_request.return_value = {'spam': 'NAO'}
 
     # Assert
     with pytest.raises(ValidationError):
+        result = feedback_service.feedbacks(data)
+        
+# Value error when the feedback id is already registered in the database
+def test_value_error_when_feedback_id_is_already_registered_in_the_database(mocker):
+    # Arrange
+    feedback_repository = mocker.Mock(spec=FeedbackRepository)
+    requested_features_repository = mocker.Mock(spec=RequestedFeaturesRepository)
+    feature_codes_repository = mocker.Mock(spec=FeatureCodesRepository)
+    llm = mocker.Mock(spec=LLM)
+
+    feedback_service = FeedbackService(
+        feedback_repository=feedback_repository,
+        requested_features_repository=requested_features_repository,
+        feature_codes_repository=feature_codes_repository,
+        llm=llm
+    )
+
+    data = {
+        'id': '0007a18c-60d7-7703-8475-161vz16f6155',
+        'feedback': 'Ótima plataforma, mas poderia ter a possibilidade de edição da forma de pagamento.'
+    }
+    
+    feedback_repository.get_feedback_by_id.return_value = ('0007a18c-60d7-7703-8475-161vz16f6155', 'Ótima plataforma, mas poderia ter a possibilidade de edição da forma de pagamento.') 
+    llm.perform_request.return_value = {'spam': 'NAO'}
+
+    # Assert
+    with pytest.raises(ValueError):
         result = feedback_service.feedbacks(data)
