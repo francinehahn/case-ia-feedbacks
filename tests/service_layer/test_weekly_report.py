@@ -98,9 +98,9 @@ def test_no_feedback_data_last_7_days(mocker):
 
     # Assert the repository methods were called
     feedback_repository.get_feedbacks_sentiment_percentage.assert_called_once()
-    requested_features_repository.get_requested_features.assert_called_once()
+    requested_features_repository.get_requested_features.assert_not_called()
 
     # Assert the LLM and email sender were called
-    llm.perform_request.assert_called_once()
+    llm.perform_request.assert_not_called()
     email_sender.send.assert_called_once()
     
