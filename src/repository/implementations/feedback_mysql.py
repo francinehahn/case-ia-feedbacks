@@ -32,3 +32,22 @@ class FeedbackMySQL(FeedbackRepository):
         finally:
             cursor.close()
             self.connection.close()
+            
+    def get_feedbacks_sentiment_percentage(self, time_period:str):
+        try:
+            connection_db = self.connection.connect()
+            cursor = connection_db.cursor()
+            query = f"""
+                SELECT sentiment, COUNT(*) * 100 / (SELECT COUNT(*) FROM {self.__table_name} WHERE created_at >= %s) AS percentage
+                FROM {self.__table_name}
+                WHERE created_at >= %s
+                GROUP BY sentiment
+            """
+            cursor.execute(query, (time_period, time_period))
+            result = cursor.fetchall()
+            return result
+        except Error as e:
+            raise Error(str(e)) from e
+        finally:
+            cursor.close()
+            self.connection.close()

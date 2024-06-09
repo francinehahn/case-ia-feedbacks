@@ -5,3 +5,8 @@ Content-Type: application/json
     "id": "3345v4gg-5796-1463-9814-361sd99k1k79",
     "feedback": "Estou usando a plataforma há pouco tempo e por isso não tenho uma opinião formada até o momento."
 }
+
+###
+
+GET http://127.0.0.1:5000/weeklySummary
+Content-Type: application/json

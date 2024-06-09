@@ -12,6 +12,7 @@ from entities.feature_code import FeatureCode
 from entities.feedback import Feedback
 from entities.requested_feature import RequestedFeature
 from marshmallow import ValidationError
+from datetime import datetime, timedelta
 
 class FeedbackService():
     def __init__(
@@ -92,7 +93,35 @@ class FeedbackService():
                 'sentiment': sentiment,
                 'requested_features': requested_features
             }
-        
+
+        except ValueError as e:
+            raise ValueError(str(e)) from e
+        except ValidationError as e:
+            raise ValidationError(str(e)) from e
+        except Error as e:
+            raise Error(str(e)) from e
+        except Exception as e:
+            raise Exception(str(e)) from e
+
+    def weekly_summary(self):
+        try:
+            # Calculates the date 7 days ago
+            seven_days_ago = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+            
+            # get sentiment percentages from the last 7 days
+            sentiment_percentages_db = self.feedback_repository.get_feedbacks_sentiment_percentage(time_period=seven_days_ago)
+            sentiment_percentages_dict = {sentiment[0]: float(sentiment[1]) for sentiment in sentiment_percentages_db}
+
+            # get the requested features from the last 7 days
+            requested_features_db = self.requested_features_repository.get_requested_features(time_period=seven_days_ago)
+            requested_features_dict = {}
+            for rf in requested_features_db:
+                if rf[2] not in requested_features_dict:
+                    requested_features_dict[rf[2]] = rf[1]
+                else:
+                    requested_features_dict[rf[2]] += '; ' + rf[1]
+            
+            
         except ValueError as e:
             raise ValueError(str(e)) from e
         except ValidationError as e:
