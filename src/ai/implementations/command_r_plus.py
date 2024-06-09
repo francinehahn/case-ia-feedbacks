@@ -26,6 +26,7 @@ class CommandRplus(LLM):
                     attempts += 1
                     result = llm.invoke(input=prompt)
                     result_text = result.content
+                    print(result_text)
                     successful = True
                 except:
                     pass

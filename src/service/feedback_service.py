@@ -44,7 +44,7 @@ class FeedbackService():
                 
             # check if the feedback is a spam
             spam_validator_prompt = PromptCreator.create_spam_prompt(feedback=feedback)
-            llm_spam_response = json.loads(self.llm.perform_request(prompt=spam_validator_prompt))
+            llm_spam_response = json.loads(self.llm.perform_request(prompt=spam_validator_prompt, temperature=0.0))
             
             # if the feedback is classifies as a spam
             if llm_spam_response['spam'].lower() == 'sim':
@@ -56,7 +56,7 @@ class FeedbackService():
             
             # feedback classification
             sentiment_analysis_prompt = PromptCreator.create_sentiment_analysis_prompt(feedback=feedback, codes=str(code_names))
-            llm_sentiment_analysis_result = json.loads(self.llm.perform_request(prompt=sentiment_analysis_prompt))
+            llm_sentiment_analysis_result = json.loads(self.llm.perform_request(prompt=sentiment_analysis_prompt, temperature=0.0))
 
             # get sentiment analysis results from the llm
             sentiment = llm_sentiment_analysis_result['sentiment']
