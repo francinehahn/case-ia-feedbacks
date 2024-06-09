@@ -10,8 +10,19 @@ from repository.implementations.requested_features_mysql import RequestedFeature
 from repository.implementations.feature_codes_mysql import FeatureCodesMySQL
 from db.connection import DatabaseConnection
 from ai.implementations.command_r_plus import CommandRplus
+from email.email_sender import EmailSender
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
+
+# email config
+app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER")
+app.config['MAIL_PORT'] = 587  # SMTP port
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 
 @app.route('/feedbacks', methods=['POST'])
 def feedbacks():
@@ -62,13 +73,17 @@ def weekly_summary():
 
         # AI
         llm = CommandRplus()
+        
+        # email sender
+        email_sender = EmailSender()
 
         # service layer
         feedback_service = FeedbackService(
             feedback_repository=feedback_repository,
             requested_features_repository=requested_features_repository,
             feature_codes_repository=feature_codes_repository,
-            llm=llm
+            llm=llm,
+            email_sender=email_sender
         )
         feedback_service.weekly_summary()
 

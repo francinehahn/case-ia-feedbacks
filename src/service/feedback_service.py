@@ -21,12 +21,14 @@ class FeedbackService():
         feedback_repository:FeedbackRepository,
         requested_features_repository:RequestedFeaturesRepository,
         feature_codes_repository:FeatureCodesRepository,
-        llm:LLM
+        llm:LLM,
+        email_sender
     ):
         self.feedback_repository = feedback_repository
         self.requested_features_repository = requested_features_repository
         self.feature_codes_repository = feature_codes_repository
         self.llm = llm
+        self.email_sender = email_sender
     
     def feedbacks(self, data):
         try:
@@ -123,13 +125,15 @@ class FeedbackService():
                 else:
                     requested_features_dict[rf[2]] += '; ' + rf[1]
             
-            # email prompt
+            # email prompt and llm response
             email_prompt = PromptCreator.create_email_prompt(
                 feedback_percentages=str(sentiment_percentages_dict),
                 requested_features=str(requested_features_dict)
             )
             email = self.llm.perform_request(prompt=email_prompt)
-            print(email)
+            
+            # send email
+            self.email_sender.send_alert(email)
         except ValueError as e:
             raise ValueError(str(e)) from e
         except ValidationError as e:
