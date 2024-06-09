@@ -24,3 +24,11 @@ class PromptCreator:
             HumanMessage(content=f"Considere o seguinte feedback recebido:\n\n{feedback}\n\nConsidere também essa lista de código de melhorias:\n\n{codes}\n\nSiga a cadeia de pensamento proposta no system e retorne o json requerido. ATENÇÃO: não retornar nada além do json. Você não precisa jsutificar a sua resposta.")
         ]
         return chat_template
+    
+    @staticmethod
+    def create_email_prompt(feedback_percentages:str, requested_features:str):
+        chat_template = [
+            SystemMessage(content="Meta Contexto\n## Você é um assistente encarregado de escrever emails para stakeholders de uma emrpesa com informações relevantes de feedbacks dos usuários de uma plataforma online. Você receberá dados de porcentagens de feedbacks negativos e positivos e também quais foram as principais melhorias sugeridas pelos usuários.\nComo parte de suas responsabilidades, você deve escrever o e-mail incluindo as informações fornecidas. Além disso, indique por que é importante incluir cada uma das melhorias sugeridas pelos usuários.\n\n## Sobre o tom da resposta:\nSua linguagem deve ser formal, contudo, clara."),
+            HumanMessage(content=f"Considere as seguintes porcentagens de feedbacks recebidos:\n\n{feedback_percentages}\n\nConsidere também essa lista de melhorias sugeridas pelos usuários:\n\n{requested_features}\n\nCom base nessas informações, escreva o email requerido.")
+        ]
+        return chat_template
