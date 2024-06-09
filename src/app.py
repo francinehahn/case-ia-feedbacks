@@ -1,6 +1,8 @@
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from mysql.connector import Error
+from marshmallow import ValidationError
 from flask import Flask, jsonify, request
 from service.feedback_service import FeedbackService
 from repository.implementations.feedback_mysql import FeedbackMySQL
@@ -38,8 +40,14 @@ def feedbacks():
         feedback = feedback_service.feedbacks(feedback_data)
         
         return jsonify(feedback), 201
-    except Exception as e:
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 422 
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 422 
+    except Error as e:
         return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
     
 if __name__ == '__main__':
     app.run(debug=True)

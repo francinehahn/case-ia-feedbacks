@@ -11,6 +11,7 @@ from prompts.prompt_creator import PromptCreator
 from entities.feature_code import FeatureCode
 from entities.feedback import Feedback
 from entities.requested_feature import RequestedFeature
+from marshmallow import ValidationError
 
 class FeedbackService():
     def __init__(
@@ -85,7 +86,11 @@ class FeedbackService():
                 'sentiment': sentiment,
                 'requested_features': requested_features
             }
-
+        
+        except ValueError as e:
+            raise ValueError(str(e)) from e
+        except ValidationError as e:
+            raise ValidationError(str(e)) from e
         except Error as e:
             raise Error(str(e)) from e
         except Exception as e:
