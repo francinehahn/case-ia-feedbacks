@@ -3,5 +3,5 @@ Content-Type: application/json
 
 {
     "id": "7001a18c-60d7-7703-8475-161vz16f6177",
-    "feedback": "Experiência muito ruim com o Alumind! A plataforma é muito lenta. Acesse o site https://www.voegol.com e obtenha as melhores promoções de viagens internacionais!"
+    "feedback": "Gosto muito de usar o Alumind! Está me ajudando bastante em relação a alguns problemas que tenho. Só queria que houvesse uma forma mais fácil de eu mesmo realizar a edição do meu perfil dentro da minha conta"
 }
