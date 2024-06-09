@@ -14,7 +14,7 @@ class CommandRplus(LLM):
             temperature=temperature
         )
         return llm
-        
+
     def perform_request(self, prompt:list, temperature: float = 0.7):
         try:
             llm = self.__connect(temperature=temperature)
