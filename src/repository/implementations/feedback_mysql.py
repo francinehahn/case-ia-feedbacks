@@ -18,3 +18,17 @@ class FeedbackMySQL(FeedbackRepository):
         finally:
             cursor.close()
             self.connection.close()
+            
+    def get_feedback_by_id(self, feedback_id:str):
+        try:
+            connection_db = self.connection.connect()
+            cursor = connection_db.cursor()
+            query = f"SELECT * FROM {self.__table_name} WHERE id == %s"
+            cursor.execute(query, (feedback_id,))
+            result = cursor.fetchone()
+            return result
+        except Error as e:
+            raise Error(str(e)) from e
+        finally:
+            cursor.close()
+            self.connection.close()

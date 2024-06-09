@@ -4,3 +4,7 @@ class FeedbackRepository(ABC):
     @abstractmethod
     def insert_feedback(self, feedback):
         pass
+    
+    @abstractmethod
+    def get_feedback_by_id(self, feedback_id:str):
+        pass
