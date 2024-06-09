@@ -2,8 +2,8 @@ POST http://127.0.0.1:5000/feedbacks
 Content-Type: application/json
 
 {
-    "id": "0072c4da-5213-4500-9714-031cd45c1c96",
-    "feedback": "Estou gostando muito da plataforma! Só seria legal se fosse possível filtrar as meditações por tempo de duração."
+    "id": "4444c5dv-4569-5236-7410-521adf5c1ca6",
+    "feedback": "Estou gostando muito da plataforma! Só seria legal se fosse possível editar as preferências de notificações."
 }
 
 ###

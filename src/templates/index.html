@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Report</title>
+
+    <style>
+        body, div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: .5rem 5rem;
+        }
+        div {
+            margin-bottom: 1.5rem;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        h2 {
+            font-size: 1.4rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: .5rem 2.5rem;
+            text-align: left;
+            border-bottom: .2rem solid #d1d1d1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bem-vindo à página de feedbacks da Alumind!</h1>
+    
+    <div>
+        <h2>Feedbacks (%):</h2>
+        <table>
+            <tr>
+                <th>Avaliação</th>
+                <th>Porcentagem</th>
+            </tr>
+            {% for sentiment, percentage in report.sentiment_percentages_dict.items() %}
+            <tr>
+                <td>{{ sentiment }}</td>
+                <td>{{ percentage }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+    <div>
+        <h2>Melhorias sugeridas (%):</h2>
+        <table>
+            <tr>
+                <th>Melhoria</th>
+                <th>Porcentagem</th>
+            </tr>
+            {% for feature, percentage in report.requested_features_dict.items() %}
+            <tr>
+                <td>{{ feature }}</td>
+                <td>{{ percentage }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
