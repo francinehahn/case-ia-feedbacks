@@ -7,7 +7,7 @@ class FeedbackInputSchema(Schema):
     @validates('id')
     def validate_id(self, id):
         try:
-            if len(id) < 36:
+            if len(id) != 36:
                 raise ValidationError('The id must have 36 characters.')
         except ValidationError as e:
             raise ValidationError(e.messages) from e

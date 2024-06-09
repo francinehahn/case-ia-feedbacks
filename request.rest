@@ -2,6 +2,6 @@ POST http://127.0.0.1:5000/feedbacks
 Content-Type: application/json
 
 {
-    "id": "7001a18c-60d7-7703-8475-161vz16f6177",
-    "feedback": "Gosto muito de usar o Alumind! Está me ajudando bastante em relação a alguns problemas que tenho. Só queria que houvesse uma forma mais fácil de eu mesmo realizar a edição do meu perfil dentro da minha conta"
+    "id": "3345v4gg-5796-1463-9814-361sd99k1k79",
+    "feedback": "Estou usando a plataforma há pouco tempo e por isso não tenho uma opinião formada até o momento."
 }
