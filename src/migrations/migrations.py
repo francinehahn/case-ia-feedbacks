@@ -24,7 +24,7 @@ def create_tables():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS feature_codes (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                code VARCHAR(255)
+                code VARCHAR(255) UNIQUE
             );
         """)
 
@@ -48,7 +48,6 @@ def create_tables():
     
     finally:
         db_connection.close()
-        print("The connection has been closed.")
 
 if __name__ == '__main__':
     create_tables()
