@@ -35,12 +35,16 @@ def feedbacks():
         # AI
         llm = CommandRplus()
         
+        # email sender
+        email_sender = EmailSender()
+            
         # service layer
         feedback_service = FeedbackService(
             feedback_repository=feedback_repository,
             requested_features_repository=requested_features_repository,
             feature_codes_repository=feature_codes_repository,
-            llm=llm
+            llm=llm,
+            email_sender=email_sender
         )
         feedback = feedback_service.feedbacks(feedback_data)
         
@@ -55,6 +59,40 @@ def feedbacks():
         return jsonify({"error": str(e)}), 400
 
 
+@app.route('/feedbacks_report', methods=['GET'])
+def feedbacks_report():
+    try:
+        # database connection
+        db_connection = DatabaseConnection()
+        
+        # repository layer
+        feedback_repository = FeedbackMySQL(connection=db_connection)
+        requested_features_repository = RequestedFeaturesMySQL(connection=db_connection)
+        feature_codes_repository = FeatureCodesMySQL(connection=db_connection)
+        
+        # AI
+        llm = CommandRplus()
+        
+        # email sender
+        email_sender = EmailSender()
+        
+        # service layer
+        feedback_service = FeedbackService(
+            feedback_repository=feedback_repository,
+            requested_features_repository=requested_features_repository,
+            feature_codes_repository=feature_codes_repository,
+            llm=llm,
+            email_sender=email_sender
+        )
+        report = feedback_service.feedbacks_report()
+        return jsonify(report), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 422 
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
 # this function will call the weeklySummary endpoint all fridays at 6PM
 def weekly_summary():
     with app.app_context():

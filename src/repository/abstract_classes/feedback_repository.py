@@ -10,5 +10,5 @@ class FeedbackRepository(ABC):
         pass
     
     @abstractmethod
-    def get_feedbacks_sentiment_percentage(self, time_period:str):
+    def get_feedbacks_sentiment_percentage(self, time_period:str = None):
         pass

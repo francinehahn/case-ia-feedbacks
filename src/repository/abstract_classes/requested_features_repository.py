@@ -8,3 +8,7 @@ class RequestedFeaturesRepository(ABC):
     @abstractmethod
     def get_requested_features(self, time_period:str):
         pass
+    
+    @abstractmethod
+    def get_requested_features_percentage(self):
+        pass

@@ -107,6 +107,27 @@ class FeedbackService():
         except Exception as e:
             raise Exception(str(e)) from e
 
+    def feedbacks_report(self):
+        try:
+            # get sentiment percentages
+            sentiment_percentages_db = self.feedback_repository.get_feedbacks_sentiment_percentage()
+            sentiment_percentages_dict = {sentiment[0]: float(sentiment[1]) for sentiment in sentiment_percentages_db}
+            
+            # get main requested features
+            requested_features_db = self.requested_features_repository.get_requested_features_percentage()
+            requested_features_dict = {rf[0]: float(rf[1]) for rf in requested_features_db}
+            
+            return {
+                'sentiment_percentages_dict': sentiment_percentages_dict,
+                'requested_features_dict': requested_features_dict
+            }
+        except ValueError as e:
+            raise ValueError(str(e)) from e
+        except Error as e:
+            raise Error(str(e)) from e
+        except Exception as e:
+            raise Exception(str(e)) from e
+    
     def weekly_summary(self):
         try:
             # Calculates the date 7 days ago

@@ -8,5 +8,5 @@ Content-Type: application/json
 
 ###
 
-GET http://127.0.0.1:5000/weeklySummary
+GET http://127.0.0.1:5000/feedbacks_report
 Content-Type: application/json
