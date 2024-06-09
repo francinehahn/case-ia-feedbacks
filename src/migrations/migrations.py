@@ -16,7 +16,7 @@ def create_tables():
                 id CHAR(36) PRIMARY KEY,
                 feedback TEXT,
                 sentiment ENUM('POSITIVO', 'NEGATIVO', 'INCONCLUSIVO'),
-                created_at DATE
+                created_at DATE DEFAULT (CURRENT_DATE)
             );
         """)
 
@@ -33,7 +33,7 @@ def create_tables():
             CREATE TABLE IF NOT EXISTS requested_features (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 feature VARCHAR(255),
-                created_at DATE,
+                created_at DATE DEFAULT (CURRENT_DATE),
                 code_id INT,
                 feedback_id CHAR(36),
                 FOREIGN KEY (code_id) REFERENCES feature_codes(id),
