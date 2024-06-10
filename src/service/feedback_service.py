@@ -79,15 +79,16 @@ class FeedbackService():
                 if feature_code not in code_names:
                     new_code = FeatureCode(code=feature_code)
                     self.feature_codes_repository.insert_code(new_code)
-                    new_code_id = int(codes_tuple[-1][0]) + 1 if len(code_names) > 0 else 1
-                else:
-                    for code in codes_tuple:
-                        code_id = code[0]
-                        code_name = code[1]
+                    codes_tuple = self.feature_codes_repository.get_codes()
+                    
+                for code in codes_tuple:
+                    code_id = code[0]
+                    code_name = code[1]
+                    
+                    if feature_code == code_name:
+                        new_code_id = code_id
+                print('CODE ID: ', new_code_id)
                         
-                        if feature_code == code_name:
-                            new_code_id = code_id
-                            
                 # insert requested feature in the database
                 requested_feature = RequestedFeature(feature=reason, code_id=new_code_id, feedback_id=feedback_id)
                 self.requested_features_repository.insert_requested_feature(requested_feature=requested_feature)
