@@ -78,6 +78,7 @@ def feedbacks():
 def weekly_summary():
     try:
         feedback_service.weekly_summary()
+        print('Email sent successfully.')
     except smtplib.SMTPException as e:
         raise smtplib.SMTPException(str(e)) from e
     except Error as e:
@@ -87,7 +88,7 @@ def weekly_summary():
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler(daemon=True)
-    scheduler.add_job(weekly_summary, 'cron', day_of_week='sun', hour=19, minute=37)
+    scheduler.add_job(weekly_summary, 'cron', day_of_week='fri', hour=18, minute=00)
     scheduler.start()
 
     try:

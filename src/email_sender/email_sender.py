@@ -34,6 +34,5 @@ class EmailSender():
             smtp_obj.login(self.sender_email, self.sender_password)
             smtp_obj.send_message(message)
             smtp_obj.quit()
-            print('Email sent successfully.')
         except smtplib.SMTPException as e:
             raise smtplib.SMTPException(str(e))

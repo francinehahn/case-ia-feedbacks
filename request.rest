@@ -2,6 +2,6 @@ POST http://127.0.0.1:5000/feedbacks
 Content-Type: application/json
 
 {
-    "id": "7896c8dv-4569-5236-7410-521adf5c1ca6",
-    "feedback": "Não tenho uma opinião definida sobre a plataforma ainda!"
+    "id": "8856c8dv-4569-5236-7410-521adf5c1ca6",
+    "feedback": "A plataforma é incrível! Venha conhecer o nosso restaurante na Alameda dos Santos, 6000 em São Paulo. Servimos os melhores pratos italianos."
 }

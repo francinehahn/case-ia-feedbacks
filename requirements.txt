@@ -1,6 +1,5 @@
 cohere==5.5.4
 Flask==3.0.3
-Flask-Mail==0.10.0
 langchain==0.2.3
 langchain-core==0.2.5
 langchain-community==0.2.4
