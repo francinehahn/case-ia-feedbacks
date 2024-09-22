@@ -1,4 +1,4 @@
-# Case IA Alura (Feedbacks Alumind)
+# Case IA (Feedbacks Alumind)
 
 ## ℹ️ Descrição do projeto:
 - **Entidades mapeadas:**
@@ -27,12 +27,12 @@
 ## 🛰 Como rodar o projeto:
 - Primeiro, faça o clone do repositório
 <pre>
-  <code>git clone https://github.com/francinehahn/case-ia-alura.git</code>
+  <code>git clone https://github.com/francinehahn/case-ia-feedbacks.git</code>
 </pre>
 
 - Acesse a raiz do projeto
 <pre>
-  <code>cd case-ia-alura</code>
+  <code>cd case-ia-feedbacks</code>
 </pre>
 
 - Crie um arquivo .env e preencha as seguintes informações:

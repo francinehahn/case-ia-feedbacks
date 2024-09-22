@@ -1,21 +1,23 @@
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from abstract_classes.LLM import LLM
 from langchain_cohere import ChatCohere
 from dotenv import load_dotenv
 
 load_dotenv()
 
-class CommandRplus(LLM):
-    def __connect(self, temperature: float = 0.7):
-        llm = ChatCohere(
-            model='command-r-plus',
-            cohere_api_key=os.getenv('COHERE_API_KEY'),
-            temperature=temperature
-        )
-        return llm
+class CommandRplus:
+    def __connect(self, temperature:float=0.7):
+        try:
+            llm = ChatCohere(
+                model='command-r-plus',
+                cohere_api_key=os.getenv('COHERE_API_KEY'),
+                temperature=temperature
+            )
+            return llm
+        except Exception as e:
+            raise Exception(str(e)) from e
 
-    def perform_request(self, prompt:list, temperature: float = 0.7):
+    def perform_request(self, prompt:list, temperature:float=0.7):
         try:
             llm = self.__connect(temperature=temperature)
             successful = False

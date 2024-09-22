@@ -1,7 +1,6 @@
-from src.repository.abstract_classes.feature_codes_repository import FeatureCodesRepository
 from mysql.connector import Error
 
-class FeatureCodesMySQL(FeatureCodesRepository):
+class FeatureCodesMySQL:
     def __init__(self, connection):
         self.connection = connection
         self.__table_name = 'feature_codes'
@@ -18,7 +17,6 @@ class FeatureCodesMySQL(FeatureCodesRepository):
             raise Error(str(e)) from e
         finally:
             cursor.close()
-            self.connection.close()
     
     def insert_code(self, code):
         try:
@@ -26,10 +24,8 @@ class FeatureCodesMySQL(FeatureCodesRepository):
             cursor = connection_db.cursor()
             query = f"INSERT INTO {self.__table_name} (code) VALUES (%s)"
             cursor.execute(query, (code.get_code(),))
-            connection_db.commit()
         except Error as e:
             print("Error while trying to connect to MySQL:", e)
             raise Error(str(e)) from e
         finally:
             cursor.close()
-            self.connection.close()
