@@ -1,17 +1,18 @@
 from src.service.feedback_service import FeedbackService
-
+from unittest.mock import MagicMock
 
 # Only INCONCLUSIVO feedback data available for the last 7 days
-def test_email_being_sent_with_feedback_data_last_7_days(mocker):
+def test_email_being_sent_with_feedback_data_last_7_days():
     # Mock dependencies
-    feedback_repository = mocker.Mock()
-    requested_features_repository = mocker.Mock()
-    feature_codes_repository = mocker.Mock()
-    llm = mocker.Mock()
-    email_sender = mocker.Mock()
+    feedback_repository = MagicMock()
+    requested_features_repository = MagicMock()
+    feature_codes_repository = MagicMock()
+    llm = MagicMock()
+    email_sender = MagicMock()
 
     # Initialize the service
     service = FeedbackService(
+        db_connection=MagicMock(),
         feedback_repository=feedback_repository,
         requested_features_repository=requested_features_repository,
         feature_codes_repository=feature_codes_repository,
@@ -38,16 +39,17 @@ def test_email_being_sent_with_feedback_data_last_7_days(mocker):
     email_sender.send.assert_called_once()
 
 # Only INCONCLUSIVO feedback data available for the last 7 days
-def test_only_inconclusivo_feedback_data_last_7_days(mocker):
+def test_only_inconclusivo_feedback_data_last_7_days():
     # Mock dependencies
-    feedback_repository = mocker.Mock()
-    requested_features_repository = mocker.Mock()
-    feature_codes_repository = mocker.Mock()
-    llm = mocker.Mock()
-    email_sender = mocker.Mock()
+    feedback_repository = MagicMock()
+    requested_features_repository = MagicMock()
+    feature_codes_repository = MagicMock()
+    llm = MagicMock()
+    email_sender = MagicMock()
 
     # Initialize the service
     service = FeedbackService(
+        db_connection=MagicMock(),
         feedback_repository=feedback_repository,
         requested_features_repository=requested_features_repository,
         feature_codes_repository=feature_codes_repository,
@@ -72,16 +74,17 @@ def test_only_inconclusivo_feedback_data_last_7_days(mocker):
 
 
 # No feedback data available for the last 7 days
-def test_no_feedback_data_last_7_days(mocker):
+def test_no_feedback_data_last_7_days():
     # Mock dependencies
-    feedback_repository = mocker.Mock()
-    requested_features_repository = mocker.Mock()
-    feature_codes_repository = mocker.Mock()
-    llm = mocker.Mock()
-    email_sender = mocker.Mock()
+    feedback_repository = MagicMock()
+    requested_features_repository = MagicMock()
+    feature_codes_repository = MagicMock()
+    llm = MagicMock()
+    email_sender = MagicMock()
 
     # Initialize the service
     service = FeedbackService(
+        db_connection=MagicMock(),
         feedback_repository=feedback_repository,
         requested_features_repository=requested_features_repository,
         feature_codes_repository=feature_codes_repository,
