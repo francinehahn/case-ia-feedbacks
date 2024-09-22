@@ -7,11 +7,11 @@ from marshmallow import ValidationError
 from flask import Flask, jsonify, request, render_template
 from apscheduler.schedulers.background import BackgroundScheduler
 from service.feedback_service import FeedbackService
-from repository.implementations.feedback_mysql import FeedbackMySQL
-from repository.implementations.requested_features_mysql import RequestedFeaturesMySQL
-from repository.implementations.feature_codes_mysql import FeatureCodesMySQL
+from src.repository.feedback_mysql import FeedbackMySQL
+from src.repository.requested_features_mysql import RequestedFeaturesMySQL
+from src.repository.feature_codes_mysql import FeatureCodesMySQL
 from db.connection import DatabaseConnection
-from ai.implementations.command_r_plus import CommandRplus
+from src.ai.command_r_plus import CommandRplus
 from email_sender.email_sender import EmailSender
 from dotenv import load_dotenv
 
@@ -35,6 +35,7 @@ email_sender = EmailSender()
     
 # service layer
 feedback_service = FeedbackService(
+    db_connection=db_connection,
     feedback_repository=feedback_repository,
     requested_features_repository=requested_features_repository,
     feature_codes_repository=feature_codes_repository,

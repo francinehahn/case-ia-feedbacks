@@ -2,7 +2,7 @@ import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
 import pytest
-from src.repository.abstract_classes.feature_codes_repository import FeatureCodesRepository
+from src.repository.abstract_classes.repository import FeatureCodesRepository
 from src.repository.abstract_classes.feedback_repository import FeedbackRepository
 from src.repository.abstract_classes.requested_features_repository import RequestedFeaturesRepository
 from src.service.feedback_service import FeedbackService

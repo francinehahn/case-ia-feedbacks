@@ -35,4 +35,6 @@ class EmailSender():
             smtp_obj.send_message(message)
             smtp_obj.quit()
         except smtplib.SMTPException as e:
-            raise smtplib.SMTPException(str(e))
+            raise smtplib.SMTPException(str(e)) from e
+        except Exception as e:
+            raise Exception(str(e)) from e

@@ -2,10 +2,6 @@ import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from mysql.connector import Error
-from repository.abstract_classes.feedback_repository import FeedbackRepository
-from repository.abstract_classes.requested_features_repository import RequestedFeaturesRepository
-from repository.abstract_classes.feature_codes_repository import FeatureCodesRepository
-from ai.abstract_classes.LLM import LLM
 from schema.feedback_input_schema import FeedbackInputSchema
 from prompts.prompt_creator import PromptCreator
 from entities.feature_code import FeatureCode
@@ -19,12 +15,14 @@ import json
 class FeedbackService():
     def __init__(
         self,
-        feedback_repository:FeedbackRepository,
-        requested_features_repository:RequestedFeaturesRepository,
-        feature_codes_repository:FeatureCodesRepository,
-        llm:LLM,
+        db_connection,
+        feedback_repository,
+        requested_features_repository,
+        feature_codes_repository,
+        llm,
         email_sender
     ):
+        self.db_connection = db_connection
         self.feedback_repository = feedback_repository
         self.requested_features_repository = requested_features_repository
         self.feature_codes_repository = feature_codes_repository
@@ -33,6 +31,10 @@ class FeedbackService():
     
     def feedbacks(self, data):
         try:
+            # Innit transaction
+            self.db_connection.connect()
+            self.db_connection.start_transaction()
+
             # data validation
             FeedbackInputSchema().validate_data(data)
             
@@ -80,7 +82,7 @@ class FeedbackService():
                     new_code = FeatureCode(code=feature_code)
                     self.feature_codes_repository.insert_code(new_code)
                     codes_tuple = self.feature_codes_repository.get_codes()
-                    
+                
                 for code in codes_tuple:
                     code_id = code[0]
                     code_name = code[1]
@@ -93,19 +95,29 @@ class FeedbackService():
                 requested_feature = RequestedFeature(feature=reason, code_id=new_code_id, feedback_id=feedback_id)
                 self.requested_features_repository.insert_requested_feature(requested_feature=requested_feature)
             
+            # commit
+            self.db_connection.commit()
+
             return {
                 'id': feedback_id,
                 'sentiment': sentiment,
                 'requested_features': requested_features
             }
-
         except ValueError as e:
+            # rollback
+            self.db_connection.rollback()
             raise ValueError(str(e)) from e
         except ValidationError as e:
+            # rollback
+            self.db_connection.rollback()
             raise ValidationError(str(e)) from e
         except Error as e:
+            # rollback
+            self.db_connection.rollback()
             raise Error(str(e)) from e
         except Exception as e:
+            # rollback
+            self.db_connection.rollback()
             raise Exception(str(e)) from e
 
     def feedbacks_report(self):
@@ -164,7 +176,6 @@ class FeedbackService():
             
             # send email
             self.email_sender.send(email)
-        
         except smtplib.SMTPException as e:
             raise smtplib.SMTPException(str(e))
         except Error as e:
