@@ -2,23 +2,21 @@ import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
 import pytest
-from src.repository.abstract_classes.repository import FeatureCodesRepository
-from src.repository.abstract_classes.feedback_repository import FeedbackRepository
-from src.repository.abstract_classes.requested_features_repository import RequestedFeaturesRepository
 from src.service.feedback_service import FeedbackService
-from src.ai.abstract_classes.LLM import LLM
 from marshmallow import ValidationError
+from unittest.mock import MagicMock
 
 # Valid feedback data is processed correctly
-def test_valid_feedback_data_processed_correctly(mocker):
+def test_valid_feedback_data_processed_correctly():
     # Arrange
-    feedback_repository = mocker.Mock(spec=FeedbackRepository)
-    requested_features_repository = mocker.Mock(spec=RequestedFeaturesRepository)
-    feature_codes_repository = mocker.Mock(spec=FeatureCodesRepository)
-    llm = mocker.Mock(spec=LLM)
-    email_sender = mocker.Mock()
+    feedback_repository = MagicMock()
+    requested_features_repository = MagicMock()
+    feature_codes_repository = MagicMock()
+    llm = MagicMock()
+    email_sender = MagicMock()
 
     feedback_service = FeedbackService(
+        db_connection=MagicMock(),
         feedback_repository=feedback_repository,
         requested_features_repository=requested_features_repository,
         feature_codes_repository=feature_codes_repository,
@@ -57,13 +55,14 @@ def test_valid_feedback_data_processed_correctly(mocker):
 # Feedback classified as spam is not inserted into the database
 def test_feedback_classified_as_spam_not_inserted(mocker):
     # Arrange
-    feedback_repository = mocker.Mock(spec=FeedbackRepository)
-    requested_features_repository = mocker.Mock(spec=RequestedFeaturesRepository)
-    feature_codes_repository = mocker.Mock(spec=FeatureCodesRepository)
-    llm = mocker.Mock(spec=LLM)
-    email_sender = mocker.Mock()
+    feedback_repository = MagicMock()
+    requested_features_repository = MagicMock()
+    feature_codes_repository = MagicMock()
+    llm = MagicMock()
+    email_sender = MagicMock()
 
     feedback_service = FeedbackService(
+        db_connection=MagicMock(),
         feedback_repository=feedback_repository,
         requested_features_repository=requested_features_repository,
         feature_codes_repository=feature_codes_repository,
@@ -96,13 +95,14 @@ def test_feedback_classified_as_spam_not_inserted(mocker):
 # Validation error when feedback id is in the incorrect format
 def test_validation_error_when_feedback_id_is_in_the_incorrect_format(mocker):
     # Arrange
-    feedback_repository = mocker.Mock(spec=FeedbackRepository)
-    requested_features_repository = mocker.Mock(spec=RequestedFeaturesRepository)
-    feature_codes_repository = mocker.Mock(spec=FeatureCodesRepository)
-    llm = mocker.Mock(spec=LLM)
-    email_sender = mocker.Mock()
+    feedback_repository = MagicMock()
+    requested_features_repository = MagicMock()
+    feature_codes_repository = MagicMock()
+    llm = MagicMock()
+    email_sender = MagicMock()
 
     feedback_service = FeedbackService(
+        db_connection=MagicMock(),
         feedback_repository=feedback_repository,
         requested_features_repository=requested_features_repository,
         feature_codes_repository=feature_codes_repository,
@@ -131,13 +131,14 @@ def test_validation_error_when_feedback_id_is_in_the_incorrect_format(mocker):
 # Validation error when the client includes a different key in the body
 def test_validation_error_when_body_in_the_incorrect_format(mocker):
     # Arrange
-    feedback_repository = mocker.Mock(spec=FeedbackRepository)
-    requested_features_repository = mocker.Mock(spec=RequestedFeaturesRepository)
-    feature_codes_repository = mocker.Mock(spec=FeatureCodesRepository)
-    llm = mocker.Mock(spec=LLM)
-    email_sender = mocker.Mock()
+    feedback_repository = MagicMock()
+    requested_features_repository = MagicMock()
+    feature_codes_repository = MagicMock()
+    llm = MagicMock()
+    email_sender = MagicMock()
 
     feedback_service = FeedbackService(
+        db_connection=MagicMock(),
         feedback_repository=feedback_repository,
         requested_features_repository=requested_features_repository,
         feature_codes_repository=feature_codes_repository,
@@ -161,13 +162,14 @@ def test_validation_error_when_body_in_the_incorrect_format(mocker):
 # Value error when the feedback id is already registered in the database
 def test_value_error_when_feedback_id_is_already_registered_in_the_database(mocker):
     # Arrange
-    feedback_repository = mocker.Mock(spec=FeedbackRepository)
-    requested_features_repository = mocker.Mock(spec=RequestedFeaturesRepository)
-    feature_codes_repository = mocker.Mock(spec=FeatureCodesRepository)
-    llm = mocker.Mock(spec=LLM)
-    email_sender = mocker.Mock()
+    feedback_repository = MagicMock()
+    requested_features_repository = MagicMock()
+    feature_codes_repository = MagicMock()
+    llm = MagicMock()
+    email_sender = MagicMock()
 
     feedback_service = FeedbackService(
+        db_connection=MagicMock(),
         feedback_repository=feedback_repository,
         requested_features_repository=requested_features_repository,
         feature_codes_repository=feature_codes_repository,
